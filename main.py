@@ -14,8 +14,9 @@ def main() -> int:
         text = f.read()
     # Guard: the gate is 1-200 chars of UTF-8, not only whitespace, one line.
     stripped = text.strip()
-    if not 1 <= len(text) <= 200 or not stripped or "\n" in stripped:
-        print("entry fails gate: must be 1-200 chars, not only whitespace, one line",
+    has_control = any(ord(c) < 32 for c in stripped)
+    if not 1 <= len(text) <= 200 or not stripped or "\n" in stripped or has_control:
+        print("entry fails gate: must be 1-200 chars, not only whitespace, one line, no control characters",
               file=sys.stderr)
         return 1
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
